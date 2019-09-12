@@ -4,6 +4,7 @@ using ImageGallery.BLL.Models;
 using ImageGallery.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,9 +23,9 @@ namespace ImageGallery.BLL.Services
             throw new NotImplementedException();
         }
 
-        public Task GetImages(Expression<Func<ImageDTO, bool>, predicate> )
+        public Task GetImages(Expression<Func<ImageDTO, bool>> predicate)
         {
-            throw new NotImplementedException();
+            
         }
 
         public Task UploadImage(ImageModel image)

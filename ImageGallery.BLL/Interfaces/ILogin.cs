@@ -1,10 +1,13 @@
-﻿using System;
+﻿using ImageGallery.BLL.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ImageGallery.BLL.Interfaces
 {
-    interface ILogin
+    public interface ILogin
     {
+        Task<TokenModel> Login(LoginModel user);
     }
 }

@@ -12,6 +12,6 @@ namespace ImageGallery.BLL.Interfaces
     {
        Task UploadImage(ImageModel image);
        Task DeleteImage(ImageDTO image);
-       Task GetImages(Expression<Func<ImageDTO,bool> predicate);
+       Task GetImages(Expression<Func<ImageDTO,bool>> predicate);
     }
 }
