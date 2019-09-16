@@ -8,6 +8,6 @@ namespace ImageGallery.DAL.Entities
     {
         public string Id { get; set; }
         public string Link { get; set; }
-        User User { get; set; }
+        public User User { get; set; }
     }
 }

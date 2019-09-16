@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,5 +7,6 @@ namespace ImageGallery.BLL.Models
 {
     public class ImageModel
     {
+        public IFormFile img;
     }
 }

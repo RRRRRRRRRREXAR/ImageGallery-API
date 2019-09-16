@@ -1,4 +1,4 @@
-﻿using ImageGallery.BLL.Models;
+﻿using ImageGallery.BLL.DTO;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ImageGallery.BLL.Interfaces
 {
-    public interface ILogin
+    public interface IRequestService
     {
-        Task<TokenModel> Login(LoginModel user);
+        Task CreateRecord(RequestDTO request);
     }
 }

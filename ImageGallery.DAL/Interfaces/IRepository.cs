@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImageGallery.DAL.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -16,6 +17,6 @@ namespace ImageGallery.DAL.Interfaces
 
         void Delete(int id);
 
-        IQueryable Find(Expression<Func<T, bool>> predicate);
+        Task<List<T>> Find(Expression<Func<T, bool>> predicate);
     }
 }
