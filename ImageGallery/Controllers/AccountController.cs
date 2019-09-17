@@ -5,8 +5,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using ImageGallery.BLL.DTO;
 using ImageGallery.BLL.Interfaces;
 using ImageGallery.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -62,7 +64,16 @@ namespace ImageGallery.Controllers
             Response.ContentType = "application/json";
             await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
         }
-
+        [HttpPost]
+        public async Task<IActionResult> Post([FromForm]RegisterBindingModel user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            await service.Register(new UserDTO{ Email=user.Email, FirstName=user.FirstName, Password=user.Password});
+            return Ok();
+        }
         private ClaimsIdentity GetIdentity(string username, string password)
         {
             Person person =_mapper.Map<Person>(service.Login(password,username));
@@ -82,5 +93,6 @@ namespace ImageGallery.Controllers
             // если пользователя не найдено
             return null;
         }
+
     }
 }

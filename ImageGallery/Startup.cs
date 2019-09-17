@@ -1,9 +1,14 @@
 ﻿using AutoMapper;
 using ImageGallery.BLL.Infrostructure;
+using ImageGallery.BLL.Interfaces;
+using ImageGallery.BLL.Services;
+using ImageGallery.DAL.DB;
+using ImageGallery.DAL.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -22,12 +27,19 @@ namespace ImageGallery
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+
+            services.AddDbContext<GalleryContext>(options => options.UseSqlServer(connection));
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IUserService,UserService>();
             var mapConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MapProfile());
             });
             IMapper mapper = mapConfig.CreateMapper();
-            
+
             services.AddSingleton(mapper);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -44,6 +56,7 @@ namespace ImageGallery
                         ValidateIssuerSigningKey = true
                     };
                 });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -58,8 +71,9 @@ namespace ImageGallery
             {
                 app.UseHsts();
             }
-            app.UseAuthentication();
-            app.UseHttpsRedirection();
+
+            app.UseCors(options => options.AllowAnyOrigin());
+           // app.UseAuthentication();
             app.UseMvc();
         }
     }

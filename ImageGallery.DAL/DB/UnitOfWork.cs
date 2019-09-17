@@ -14,6 +14,10 @@ namespace ImageGallery.DAL.DB
         private Repository<Request> requestRepository;
         private Repository<User> userRepository;
        
+        public UnitOfWork(GalleryContext context)
+        {
+            this.db = context;
+        }
        public IRepository<Image> Images
         {
             get
