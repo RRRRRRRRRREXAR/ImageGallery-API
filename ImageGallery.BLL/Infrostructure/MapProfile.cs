@@ -17,6 +17,7 @@ namespace ImageGallery.BLL.Infrostructure
             CreateMap<RequestDTO, Request>();
             CreateMap<User, UserDTO>();
             CreateMap<UserDTO, User>();
+
         }
     }
 }

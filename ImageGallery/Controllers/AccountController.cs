@@ -65,23 +65,23 @@ namespace ImageGallery.Controllers
             await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
         }
         [HttpPost]
-        public async Task<IActionResult> Post([FromForm]RegisterBindingModel user)
+        public async Task<IActionResult> Post([FromBody]RegisterBindingModel user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            await service.Register(new UserDTO{ Email=user.Email, FirstName=user.FirstName, Password=user.Password});
+            await service.Register(new UserDTO{ Email=user.Email, FirstName=user.FirstName, Password=user.Password,Role="User"});
             return Ok();
         }
         private ClaimsIdentity GetIdentity(string username, string password)
         {
-            Person person =_mapper.Map<Person>(service.Login(password,username));
+            var person =service.Login(password,username);
             if (person != null)
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, person.FirstName),
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, person.Email),
                     new Claim(ClaimsIdentity.DefaultRoleClaimType, person.Role)
                 };
                 ClaimsIdentity claimsIdentity =

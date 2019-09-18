@@ -3,6 +3,7 @@ using ImageGallery.BLL.DTO;
 using ImageGallery.BLL.Infrostructure;
 using ImageGallery.BLL.Interfaces;
 using ImageGallery.BLL.Models;
+using ImageGallery.DAL.Entities;
 using ImageGallery.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -22,15 +23,18 @@ namespace ImageGallery.BLL.Services
         {
             mc.AddProfile(new MapProfile());
         });
-        public UserDTO Login(string Password, string FirstName)
+        public UserDTO Login(string Password, string Email)
         {
             var mapper = new Mapper(config);
-            return  mapper.Map<UserDTO>(unit.Users.Find(user => user.Password == Password && user.FirstName == FirstName));
+            var result=  mapper.Map<UserDTO>(unit.Users.Find(user => user.Password == Password && user.Email == Email));
+            return result;
         }
 
-        public Task Register(UserDTO user)
+        public async Task Register(UserDTO user)
         {
-            throw new NotImplementedException();
+            var mapper = new Mapper(config);
+            await unit.Users.Create(mapper.Map<User>(user));
+            unit.Save();
         }
     }
 }

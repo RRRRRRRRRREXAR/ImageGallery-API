@@ -33,9 +33,9 @@ namespace ImageGallery.DAL.Repositories
             }
         }
 
-        public Task<List<T>> Find(Expression<Func<T,bool>> predicate)
+        public  T Find(Expression<Func<T,bool>> predicate)
         {
-            return _dbSet.Where(predicate).ToListAsync(); 
+            return _dbSet.Where(predicate).FirstOrDefault(); 
         }
 
         public IEnumerable<T> GetAll()

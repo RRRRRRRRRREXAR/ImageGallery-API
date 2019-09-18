@@ -14,6 +14,7 @@ namespace ImageGallery.DAL.DB
             
         public GalleryContext(DbContextOptions<GalleryContext> options):base(options)
         {
+            Database.EnsureCreated();
         }
     }
 }

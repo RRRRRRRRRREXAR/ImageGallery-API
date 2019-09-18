@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace ImageGallery.DAL.Entities
 {
     public class User
     {
+        [KeyAttribute]
         public string Id { get; set; }
         public string FirstName {get;set;}
         public string Email { get; set; }

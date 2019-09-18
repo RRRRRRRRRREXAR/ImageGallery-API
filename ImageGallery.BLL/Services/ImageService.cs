@@ -40,7 +40,7 @@ namespace ImageGallery.BLL.Services
         {
             var mapper = new Mapper(config);
             Expression<Func<Image, bool>> expression = mapper.Map<Expression<Func<Image, bool>>>(predicate);
-            List<ImageDTO> images= mapper.Map<List<ImageDTO>>(await unit.Images.Find(expression));
+            List<ImageDTO> images= mapper.Map<List<ImageDTO>>(unit.Images.Find(expression));
             return images;
         }
 

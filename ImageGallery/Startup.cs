@@ -32,7 +32,7 @@ namespace ImageGallery
             string connection = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<GalleryContext>(options => options.UseSqlServer(connection));
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IUserService,UserService>();
             var mapConfig = new MapperConfiguration(mc =>
             {
@@ -72,7 +72,7 @@ namespace ImageGallery
                 app.UseHsts();
             }
 
-            app.UseCors(options => options.AllowAnyOrigin());
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
            // app.UseAuthentication();
             app.UseMvc();
         }
