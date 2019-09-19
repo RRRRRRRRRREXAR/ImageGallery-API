@@ -40,7 +40,7 @@ namespace ImageGallery.Middleware
                 //Format the response from the server
                 var response = await FormatResponse(context.Response);
 
-                service.CreateRecord();
+               // service.CreateRecord();
 
                 //Copy the contents of the new memory stream (which contains the response) to the original stream, which is then returned to the client.
                 await responseBody.CopyToAsync(originalBodyStream);
