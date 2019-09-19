@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ImageGallery.BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,11 @@ namespace ImageGallery.Controllers
         public ImageController(IImageService service)
         {
             this.service = service;
+        }
+        [Authorize]
+        public async Task Post(IFormFile image)
+        {
+            await service.UploadImage(new BLL.Models.ImageModel { img=image },new BLL.DTO.UserDTO { });
         }
     }
 }
