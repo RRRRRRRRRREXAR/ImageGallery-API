@@ -7,7 +7,7 @@ namespace ImageGallery.DAL.Entities
 {
     public class Request
     {
-        [KeyAttribute]
+        [Key]
         public string Id { get; set; }
         public string Url { get; set; }
         public string Headers { get; set; }
