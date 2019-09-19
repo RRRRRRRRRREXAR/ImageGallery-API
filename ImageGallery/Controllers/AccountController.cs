@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -32,6 +33,9 @@ namespace ImageGallery.Controllers
         [HttpPost("/token")]
         public async Task Token()
         {
+
+            var sw = Stopwatch.StartNew();
+
             var username = Request.Form["username"];
             var password = Request.Form["password"];
 
@@ -63,6 +67,10 @@ namespace ImageGallery.Controllers
             // сериализация ответа
             Response.ContentType = "application/json";
             await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
+
+            sw.Stop();
+            var value = sw.ElapsedMilliseconds;
+
         }
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]RegisterBindingModel user)

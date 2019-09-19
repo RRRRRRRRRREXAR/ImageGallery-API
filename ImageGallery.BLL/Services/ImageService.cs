@@ -15,6 +15,9 @@ using System.Threading.Tasks;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using Image = ImageGallery.DAL.Entities.Image;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Hosting;
 
 namespace ImageGallery.BLL.Services
 {
@@ -35,7 +38,10 @@ namespace ImageGallery.BLL.Services
             unit.Images.Delete(image.Id);
             await Task.Run(() => { File.Delete(image.Link); });
         }
-
+        public async Task<UserDTO> GetUserByEmail(string Email)
+        {
+            unit.Users.Find(user=>user.Email==Email);
+        }
         public async Task<IEnumerable<ImageDTO>> GetImages(Expression<Func<ImageDTO, bool>> predicate)
         {
             var mapper = new Mapper(config);
@@ -56,13 +62,17 @@ namespace ImageGallery.BLL.Services
            });
         }
 
-        public async Task UploadImage(ImageModel model,UserDTO user)
+        public async Task UploadImage(IHostingEnvironment _appEnvironment, IFormFile image,UserDTO user)
         {
             var mapper = new Mapper(config);
-            var filePath = Path.GetTempFileName();
-            var stream = new FileStream(filePath, FileMode.Create);
-            Image uploadedImage = new Image { Link = filePath, User = mapper.Map<User>(user) };
-            await Task.WhenAll(unit.Images.Create(uploadedImage), model.img.CopyToAsync(stream));
+            var fileName = ContentDispositionHeaderValue.Parse(image.ContentDisposition).FileName.Trim('"');
+            string path = "/Images/" + fileName;
+            using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+            {
+               await image.CopyToAsync(fileStream);
+            }
+            ImageDTO uploadedImage = new ImageDTO { Link = image.FileName, User=user };
+            await unit.Images.Create(mapper.Map<Image>(uploadedImage));
             unit.Save();
         }
 

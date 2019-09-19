@@ -12,12 +12,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using System.IO;
 
 namespace ImageGallery
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -35,6 +38,8 @@ namespace ImageGallery
             services.AddDbContext<GalleryContext>(options => options.UseSqlServer(connection));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IUserService,UserService>();
+            services.AddTransient<IImageService, ImageService>();
+            services.AddTransient<IRequestService, RequestService>();
             var mapConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MapProfile());
@@ -74,6 +79,9 @@ namespace ImageGallery
             }
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
+            app.UseStaticFiles();
+
+           
             app.UseMvc();
         }
     }

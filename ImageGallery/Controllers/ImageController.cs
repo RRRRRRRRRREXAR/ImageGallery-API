@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ImageGallery.BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,14 +16,17 @@ namespace ImageGallery.Controllers
     public class ImageController : ControllerBase
     {
         IImageService service;
-        public ImageController(IImageService service)
+        IHostingEnvironment hostingEnviroment;
+        IUserService userService;
+        public ImageController(IImageService service,IHostingEnvironment hostingEnviroment)
         {
             this.service = service;
+            this.hostingEnviroment = hostingEnviroment;
         }
         [Authorize]
         public async Task Post(IFormFile image)
         {
-            await service.UploadImage(new BLL.Models.ImageModel { img=image },new BLL.DTO.UserDTO { });
+            await service.UploadImage(hostingEnviroment,image,userService.);
         }
     }
 }

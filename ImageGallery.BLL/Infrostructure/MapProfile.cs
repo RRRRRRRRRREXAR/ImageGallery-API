@@ -11,8 +11,16 @@ namespace ImageGallery.BLL.Infrostructure
     {
         public MapProfile()
         {
-            CreateMap<ImageDTO, Image>();
-            CreateMap<Image, ImageDTO>();
+            CreateMap<ImageDTO, Image>().
+                ForMember(
+                dest=>dest.User,
+                opt=>opt.MapFrom(src=>src.User)
+                );
+            CreateMap<Image, ImageDTO>().
+                ForMember(
+                dest=>dest.User,
+                opt=>opt.MapFrom(src=>src.User)
+                );
             CreateMap<Request, RequestDTO>();
             CreateMap<RequestDTO, Request>();
             CreateMap<User, UserDTO>();
