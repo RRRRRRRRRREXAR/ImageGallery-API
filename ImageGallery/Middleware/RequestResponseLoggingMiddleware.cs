@@ -35,12 +35,10 @@ namespace ImageGallery.Middleware
                 context.Response.Body = responseBody;
 
                 //Continue down the Middleware pipeline, eventually returning to this class
-                await _next(context);
-
-                //Format the response from the server
                 var response = await FormatResponse(context.Response);
+                Task.WaitAll(_next(context), service.CreateRecord(new BLL.DTO.RequestDTO { Body = response }));
+                //Format the response from the server
 
-                service.CreateRecord();
 
                 //Copy the contents of the new memory stream (which contains the response) to the original stream, which is then returned to the client.
                 await responseBody.CopyToAsync(originalBodyStream);

@@ -4,6 +4,7 @@ using ImageGallery.BLL.Interfaces;
 using ImageGallery.BLL.Services;
 using ImageGallery.DAL.DB;
 using ImageGallery.DAL.Interfaces;
+using ImageGallery.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -71,9 +72,8 @@ namespace ImageGallery
             {
                 app.UseHsts();
             }
-
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-           // app.UseAuthentication();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
