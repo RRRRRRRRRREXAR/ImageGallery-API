@@ -4,6 +4,7 @@ using ImageGallery.BLL.Interfaces;
 using ImageGallery.BLL.Services;
 using ImageGallery.DAL.DB;
 using ImageGallery.DAL.Interfaces;
+using ImageGallery.MapProfile;
 using ImageGallery.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -42,7 +43,7 @@ namespace ImageGallery
             services.AddTransient<IRequestService, RequestService>();
             var mapConfig = new MapperConfiguration(mc =>
             {
-                mc.AddProfile(new MapProfile());
+                mc.AddProfile(new UserProfile());
             });
             IMapper mapper = mapConfig.CreateMapper();
 

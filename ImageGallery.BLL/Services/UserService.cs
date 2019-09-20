@@ -30,6 +30,13 @@ namespace ImageGallery.BLL.Services
             return result;
         }
 
+        public UserDTO GetUserByEmail(string Email)
+        {
+            var mapper = new Mapper(config);
+            var smt = unit.Users.Find(user => user.Email == Email).Result;
+            var foundedUser= mapper.Map<UserDTO>(smt[0]);
+            return foundedUser;
+        }
         public async Task Register(UserDTO user)
         {
             var mapper = new Mapper(config);

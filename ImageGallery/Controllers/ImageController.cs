@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using ImageGallery.BLL.Interfaces;
+using ImageGallery.DAL.Entities;
+using ImageGallery.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
@@ -18,15 +21,34 @@ namespace ImageGallery.Controllers
         IImageService service;
         IHostingEnvironment hostingEnviroment;
         IUserService userService;
-        public ImageController(IImageService service,IHostingEnvironment hostingEnviroment)
+        private readonly IMapper mapper;
+
+        public ImageController(IImageService service,IHostingEnvironment hostingEnviroment,IUserService userService,IMapper mapper)
         {
             this.service = service;
+            this.userService = userService;
             this.hostingEnviroment = hostingEnviroment;
+            this.mapper = mapper;
         }
         [Authorize]
         public async Task Post(IFormFile image)
         {
-            await service.UploadImage(hostingEnviroment,image,userService.);
+            var user= userService.GetUserByEmail(User.Identity.Name);
+            await service.UploadImage(hostingEnviroment,image,user);
+        }
+        [HttpGet]
+        [Authorize]
+        public async Task<IEnumerable<ImageModel>> Get()
+        {
+            var user = mapper.Map<User>(userService.GetUserByEmail(User.Identity.Name));
+            var images = await service.GetImages(us => us.User == user);
+            return mapper.Map<IEnumerable<ImageModel>>(images);
+        }
+        [HttpDelete]
+        [Authorize]
+        public async Task Delete(string id)
+        {
+            await service.DeleteImage(id);
         }
     }
 }

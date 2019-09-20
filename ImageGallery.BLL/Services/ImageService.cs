@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Extensions.ExpressionMapping;
 using ImageGallery.BLL.DTO;
 using ImageGallery.BLL.Infrostructure;
 using ImageGallery.BLL.Interfaces;
@@ -33,20 +34,19 @@ namespace ImageGallery.BLL.Services
             this.unit = unit;
         }
 
-        public async Task DeleteImage(ImageDTO image)
+        public async Task DeleteImage(string id)
         {
-            unit.Images.Delete(image.Id);
-            await Task.Run(() => { File.Delete(image.Link); });
+            unit.Images.Delete(id);
+            //var img = await unit.Images.Find(d => d.Id == id);
+            // File.Delete(img[0].);
+            unit.Save();
         }
-        public async Task<UserDTO> GetUserByEmail(string Email)
-        {
-            unit.Users.Find(user=>user.Email==Email);
-        }
-        public async Task<IEnumerable<ImageDTO>> GetImages(Expression<Func<ImageDTO, bool>> predicate)
+        
+        public async Task<IEnumerable<ImageDTO>> GetImages(Expression<Func<Image, bool>> predicate)
         {
             var mapper = new Mapper(config);
-            Expression<Func<Image, bool>> expression = mapper.Map<Expression<Func<Image, bool>>>(predicate);
-            List<ImageDTO> images= mapper.Map<List<ImageDTO>>(unit.Images.Find(expression));
+            var lit = unit.Images.Find(predicate).Result;
+            List<ImageDTO> images= mapper.Map<List<ImageDTO>>(lit);
             return images;
         }
 
@@ -71,7 +71,7 @@ namespace ImageGallery.BLL.Services
             {
                await image.CopyToAsync(fileStream);
             }
-            ImageDTO uploadedImage = new ImageDTO { Link = image.FileName, User=user };
+            ImageDTO uploadedImage = new ImageDTO { Link = "https://localhost:44327" + path, User=user };
             await unit.Images.Create(mapper.Map<Image>(uploadedImage));
             unit.Save();
         }

@@ -15,8 +15,8 @@ namespace ImageGallery.DAL.Interfaces
 
         void Update(T entity);
 
-        void Delete(int id);
+        void Delete(string id);
 
-        T Find(Expression<Func<T, bool>> predicate);
+        Task <List<T>> Find(Expression<Func<T, bool>> predicate);
     }
 }

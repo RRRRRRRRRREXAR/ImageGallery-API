@@ -1,5 +1,6 @@
 ﻿using ImageGallery.BLL.DTO;
 using ImageGallery.BLL.Models;
+using ImageGallery.DAL.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -14,9 +15,9 @@ namespace ImageGallery.BLL.Interfaces
    public interface IImageService
     {
        Task UploadImage(IHostingEnvironment _appEnvironment, IFormFile image, UserDTO user);
-       Task DeleteImage(ImageDTO image);
-       Task<IEnumerable<ImageDTO>> GetImages(Expression<Func<ImageDTO,bool>> predicate);
+       Task DeleteImage(string id);
+       Task<IEnumerable<ImageDTO>> GetImages(Expression<Func<Image,bool>> predicate);
        Task<ImageDTO> Rotate(ImageDTO image);
-       Task<UserDTO> GetUserByEmail(string Email);
+       
     }
 }

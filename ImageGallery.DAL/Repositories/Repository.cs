@@ -24,7 +24,7 @@ namespace ImageGallery.DAL.Repositories
            await _dbSet.AddAsync(entity);
         }
 
-        public void Delete(int id)
+        public void Delete(string id)
         {
             T item = _dbSet.Find(id);
             if (item != null)
@@ -33,9 +33,9 @@ namespace ImageGallery.DAL.Repositories
             }
         }
 
-        public  T Find(Expression<Func<T,bool>> predicate)
+        public  Task<List<T>> Find(Expression<Func<T,bool>> predicate)
         {
-            return _dbSet.Where(predicate).FirstOrDefault(); 
+            return _dbSet.Where(predicate).ToListAsync(); 
         }
 
         public IEnumerable<T> GetAll()

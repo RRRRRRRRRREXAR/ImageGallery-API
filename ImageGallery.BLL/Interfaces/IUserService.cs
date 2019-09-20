@@ -11,5 +11,6 @@ namespace ImageGallery.BLL.Interfaces
     {
         Task Register(UserDTO user);
         UserDTO Login(string Password,string FirstName);
+        UserDTO GetUserByEmail(string Email);
     }
 }
