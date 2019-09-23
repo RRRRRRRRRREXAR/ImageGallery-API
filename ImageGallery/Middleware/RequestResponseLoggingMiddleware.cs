@@ -26,7 +26,9 @@ namespace ImageGallery.Middleware
 
         public async Task Invoke(HttpContext context,IRequestService reqestService)
         {
-            await reqestService.CreateRecord(await FormatRequest(context.Request));
+            RequestDTO formatedRequest = await FormatRequest(context.Request);
+            await reqestService.CreateRecord(formatedRequest);
+            _logger.LogInformation(formatedRequest.Headers + "," + formatedRequest.Body + "," + formatedRequest.QueryParams);
             var originalBodyStream = context.Response.Body;
             using(var responseBody = new MemoryStream())
             {
@@ -51,6 +53,7 @@ namespace ImageGallery.Middleware
             requestDTO.QueryParams = request.QueryString.Value;
             requestDTO.Headers = string.Join(",",request.Headers.Values);
             requestDTO.HttpVerb = request.Scheme;
+            requestDTO.Url = request.Host.Value;
             return requestDTO;
         }
 

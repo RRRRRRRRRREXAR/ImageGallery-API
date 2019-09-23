@@ -24,7 +24,7 @@ namespace ImageGallery.DAL.Repositories
            await _dbSet.AddAsync(entity);
         }
 
-        public void Delete(string id)
+        public void Delete(int id)
         {
             T item = _dbSet.Find(id);
             if (item != null)

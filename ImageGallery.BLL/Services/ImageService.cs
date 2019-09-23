@@ -34,20 +34,42 @@ namespace ImageGallery.BLL.Services
             this.unit = unit;
         }
 
-        public async Task DeleteImage(string id)
+        public async Task DeleteImage(int id)
         {
             unit.Images.Delete(id);
             //var img = await unit.Images.Find(d => d.Id == id);
             // File.Delete(img[0].);
             unit.Save();
         }
-        
+
+        public async Task<ImageDTO> GetImage(int id)
+        {
+            var mapper = new Mapper(config);
+            var images = await unit.Images.Find(d => d.Id == id);
+            return mapper.Map<ImageDTO>(images[0]);
+        }
+
         public async Task<IEnumerable<ImageDTO>> GetImages(Expression<Func<Image, bool>> predicate)
         {
             var mapper = new Mapper(config);
             var lit = unit.Images.Find(predicate).Result;
             List<ImageDTO> images= mapper.Map<List<ImageDTO>>(lit);
             return images;
+        }
+
+        public async Task<ImageDTO> Resize(int id, int height, int width)
+        {
+            var mapper = new Mapper(config);
+            ImageDTO image = await GetImage(id);
+            using (SixLabors.ImageSharp.Image img = SixLabors.ImageSharp.Image.Load(image.Link, out var imageFormat))
+            {
+                img.Mutate(x => x.Resize(width,height));
+                image.Link = image.Link + width.ToString() + height.ToString();
+                img.Save(image.Link);
+                await unit.Images.Create(mapper.Map<Image>(image));
+            }
+            return image;
+
         }
 
         public async Task<ImageDTO> Rotate(ImageDTO image)
@@ -76,5 +98,9 @@ namespace ImageGallery.BLL.Services
             unit.Save();
         }
 
+        Task IImageService.Resize(int id, int height, int width)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -44,11 +44,19 @@ namespace ImageGallery.Controllers
             var images = await service.GetImages(us => us.User == user);
             return mapper.Map<IEnumerable<ImageModel>>(images);
         }
+        [HttpGet("/GetImage")]
+        [Authorize]
+        public async Task<ImageModel> GetImage(int id)
+        {
+           // var user = mapper.Map<User>(userService.GetUserByEmail(User.Identity.Name));
+            var image = await service.GetImage(id);
+            return mapper.Map<ImageModel>(image);
+        }
         [HttpDelete]
         [Authorize]
         public async Task Delete(string id)
         {
-            await service.DeleteImage(id);
+            await service.DeleteImage(Convert.ToInt32(id));
         }
     }
 }

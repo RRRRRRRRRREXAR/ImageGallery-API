@@ -26,7 +26,7 @@ namespace ImageGallery.BLL.Services
         public UserDTO Login(string Password, string Email)
         {
             var mapper = new Mapper(config);
-            var result=  mapper.Map<UserDTO>(unit.Users.Find(user => user.Password == Password && user.Email == Email));
+            var result=  mapper.Map<UserDTO>(unit.Users.Find(user => user.Password == Password && user.Email == Email).Result[0]);
             return result;
         }
 

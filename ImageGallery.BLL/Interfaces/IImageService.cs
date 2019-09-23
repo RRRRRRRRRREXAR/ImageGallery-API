@@ -15,9 +15,11 @@ namespace ImageGallery.BLL.Interfaces
    public interface IImageService
     {
        Task UploadImage(IHostingEnvironment _appEnvironment, IFormFile image, UserDTO user);
-       Task DeleteImage(string id);
+       Task DeleteImage(int id);
        Task<IEnumerable<ImageDTO>> GetImages(Expression<Func<Image,bool>> predicate);
        Task<ImageDTO> Rotate(ImageDTO image);
+        Task<ImageDTO> GetImage(int id);
+       Task Resize(int id,int height,int width);
        
     }
 }
