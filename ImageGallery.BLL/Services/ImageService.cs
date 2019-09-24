@@ -57,28 +57,29 @@ namespace ImageGallery.BLL.Services
             return images;
         }
 
-        public async Task<ImageDTO> Resize(int id, int height, int width)
+        public async Task<byte[]> Resize(int id, int height, int width, IHostingEnvironment _appEnvironment)
         {
             var mapper = new Mapper(config);
             ImageDTO image = await GetImage(id);
-            using (SixLabors.ImageSharp.Image img = SixLabors.ImageSharp.Image.Load(image.Link, out var imageFormat))
+            var imgName = image.Link.Split('/')[4];
+            using (SixLabors.ImageSharp.Image img = SixLabors.ImageSharp.Image.Load(_appEnvironment.WebRootPath+"\\Images\\"+imgName, out var imageFormat))
             {
+                var ms = new MemoryStream();
                 img.Mutate(x => x.Resize(width,height));
-                image.Link = image.Link + width.ToString() + height.ToString();
-                img.Save(image.Link);
-                await unit.Images.Create(mapper.Map<Image>(image));
+                img.Save(ms, imageFormat);
+                return ms.ToArray();
             }
-            return image;
-
         }
 
-        public async Task<ImageDTO> Rotate(ImageDTO image)
+        public async Task<ImageDTO> Rotate(ImageDTO image, IHostingEnvironment _appEnvironment)
         {
+            var imgName = image.Link.Split('/')[4];
+            string path = _appEnvironment.WebRootPath + "\\Images\\" + imgName;
           return await Task<ImageDTO>.Run(()=> {
-               using (SixLabors.ImageSharp.Image img = SixLabors.ImageSharp.Image.Load(image.Link, out var imageFormat))
+               using (SixLabors.ImageSharp.Image img = SixLabors.ImageSharp.Image.Load(path, out var imageFormat))
                {
                    img.Mutate(x => x.Rotate(RotateMode.Rotate90));
-                   img.Save(image.Link);
+                   img.Save(path);
                }
                return image;
            });
@@ -98,9 +99,5 @@ namespace ImageGallery.BLL.Services
             unit.Save();
         }
 
-        Task IImageService.Resize(int id, int height, int width)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

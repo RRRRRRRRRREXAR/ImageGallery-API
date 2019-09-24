@@ -17,9 +17,9 @@ namespace ImageGallery.BLL.Interfaces
        Task UploadImage(IHostingEnvironment _appEnvironment, IFormFile image, UserDTO user);
        Task DeleteImage(int id);
        Task<IEnumerable<ImageDTO>> GetImages(Expression<Func<Image,bool>> predicate);
-       Task<ImageDTO> Rotate(ImageDTO image);
+       Task<ImageDTO> Rotate(ImageDTO image, IHostingEnvironment _appEnvironment);
         Task<ImageDTO> GetImage(int id);
-       Task Resize(int id,int height,int width);
+       Task<byte[]> Resize(int id,int height,int width, IHostingEnvironment _appEnvironment);
        
     }
 }

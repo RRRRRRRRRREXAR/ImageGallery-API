@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using ImageGallery.BLL.DTO;
 using ImageGallery.BLL.Interfaces;
 using ImageGallery.DAL.Entities;
 using ImageGallery.Models;
@@ -44,13 +45,21 @@ namespace ImageGallery.Controllers
             var images = await service.GetImages(us => us.User == user);
             return mapper.Map<IEnumerable<ImageModel>>(images);
         }
-        [HttpGet("/GetImage")]
+        //[HttpGet("/GetImage")]
+        //[Authorize]
+        //public async Task<ImageModel> GetImage(int id)
+        //{
+        //   // var user = mapper.Map<User>(userService.GetUserByEmail(User.Identity.Name));
+        //    var image = await service.GetImage(id);
+        //    return mapper.Map<ImageModel>(image);
+        //}
+        [HttpGet("/Rotate")]
         [Authorize]
-        public async Task<ImageModel> GetImage(int id)
+        public async Task<ImageModel> Rotate(int id)
         {
-           // var user = mapper.Map<User>(userService.GetUserByEmail(User.Identity.Name));
-            var image = await service.GetImage(id);
-            return mapper.Map<ImageModel>(image);
+            // var user = mapper.Map<User>(userService.GetUserByEmail(User.Identity.Name));
+            ImageDTO image =await service.GetImage(id);
+            return mapper.Map<ImageModel>(await service.Rotate(image, hostingEnviroment));
         }
         [HttpDelete]
         [Authorize]
